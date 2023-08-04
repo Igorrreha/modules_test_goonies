@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://b53i4fmgy3isl"]
+
+[ext_resource type="PackedScene" uid="uid://bro1x0wc2n1k0" path="res://modules/hero/hero.tscn" id="1_q5h13"]
+[ext_resource type="Script" path="res://modules/keyboard_axis_input_handler/action_axis_input_handler.gd" id="2_yb422"]
+[ext_resource type="Script" path="res://modules/action_press_handler/action_press_handler.gd" id="3_voxhx"]
+[ext_resource type="Script" path="res://modules/hero_input_transmitter/hero_input_transmitter.gd" id="3_w473i"]
+[ext_resource type="Resource" uid="uid://c1nkrmoogttui" path="res://modules/hero_input_channel/hero_input_channel.tres" id="4_ehe4r"]
+
+[node name="Main" type="Node"]
+
+[node name="GameWorld" type="Node2D" parent="."]
+
+[node name="Hero" parent="GameWorld" instance=ExtResource("1_q5h13")]
+position = Vector2(265, 161)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="GameWorld"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="GameWorld/StaticBody2D"]
+polygon = PackedVector2Array(-64, 320, 576, 320, 485, 518, -140, 489)
+
+[node name="Input" type="Node" parent="."]
+
+[node name="Handlers" type="Node" parent="Input"]
+
+[node name="HorizontalAxis" type="Node" parent="Input/Handlers"]
+script = ExtResource("2_yb422")
+_action_from = &"ui_left"
+_action_to = &"ui_right"
+
+[node name="UiAcceptAction" type="Node" parent="Input/Handlers"]
+script = ExtResource("3_voxhx")
+_action = &"ui_accept"
+
+[node name="Transmitters" type="Node" parent="Input"]
+
+[node name="HeroInputTransmitter" type="Node" parent="Input/Transmitters"]
+script = ExtResource("3_w473i")
+_channel = ExtResource("4_ehe4r")
+
+[connection signal="value_changed" from="Input/Handlers/HorizontalAxis" to="Input/Transmitters/HeroInputTransmitter" method="on_horizontal_axis_input"]
+[connection signal="action_pressed" from="Input/Handlers/UiAcceptAction" to="Input/Transmitters/HeroInputTransmitter" method="on_jump_input"]

@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://bro1x0wc2n1k0"]
+
+[ext_resource type="Script" path="res://modules/hero/hero.gd" id="1_5g14i"]
+[ext_resource type="Script" path="res://modules/hero_input_reciever/hero_input_reciever.gd" id="2_4200b"]
+[ext_resource type="Resource" uid="uid://c1nkrmoogttui" path="res://modules/hero_input_channel/hero_input_channel.tres" id="3_ajp7p"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k0jii"]
+size = Vector2(64, 64)
+
+[node name="Hero" type="CharacterBody2D"]
+script = ExtResource("1_5g14i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_k0jii")
+
+[node name="InputReciever" type="Node" parent="."]
+script = ExtResource("2_4200b")
+_input_channel = ExtResource("3_ajp7p")
+
+[connection signal="jump_input_recieved" from="InputReciever" to="." method="jump"]
+[connection signal="move_horizontal_input_recieved" from="InputReciever" to="." method="set_running_direction"]
